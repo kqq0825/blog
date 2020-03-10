@@ -1,7 +1,6 @@
 ## JavaScript
 
-- 创建Array的三种方法[Google][1]
-[1]:./Js-page-1.md
+- 创建Array的三种方法[title](./Js-page-1.md){target="_blank"}
 
 ## Css
 
