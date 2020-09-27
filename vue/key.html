@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>vue中key的作用 | KQQ Blog</title>
+    <meta name="generator" content="VuePress 1.5.4">
+    
+    <meta name="description" content="今天不学习，明天就下岗！">
+    <link rel="preload" href="/blog/assets/css/0.styles.5608eb1c.css" as="style"><link rel="preload" href="/blog/assets/js/app.459e5512.js" as="script"><link rel="preload" href="/blog/assets/js/2.0e1075d0.js" as="script"><link rel="preload" href="/blog/assets/js/7.8fa74af5.js" as="script"><link rel="prefetch" href="/blog/assets/js/3.823b1e2d.js"><link rel="prefetch" href="/blog/assets/js/4.5ed19beb.js"><link rel="prefetch" href="/blog/assets/js/5.437192d4.js"><link rel="prefetch" href="/blog/assets/js/6.8fcbf67c.js">
+    <link rel="stylesheet" href="/blog/assets/css/0.styles.5608eb1c.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/blog/" class="home-link router-link-active"><!----> <span class="site-name">KQQ Blog</span></a> <div class="links"><!----> <!----></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><!---->  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>JavaScript</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/blog/javascript/imgPreview.html" class="sidebar-link">前端图片本地预览</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>HTML</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>VUE</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/blog/vue/key.html" aria-current="page" class="active sidebar-link">vue中key的作用</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/blog/vue/key.html#vue中key的作用" class="sidebar-link">vue中key的作用</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="vue中key的作用"><a href="#vue中key的作用" class="header-anchor">#</a> vue中key的作用</h2> <blockquote><p>key作为vue中重要的属性，主要作用是发挥在虚拟DOM对比算法中，也就是Diff算法。</p></blockquote> <h3 id="diff算法中key的作用"><a href="#diff算法中key的作用" class="header-anchor">#</a> Diff算法中key的作用</h3> <blockquote><p>Patch的过程，其实就是一个打补丁的过程。逐层对比新的vNode节点和旧的vNode节点。</p></blockquote> <ul><li>创建新的DOM节点</li> <li>移除旧的DOM节点</li> <li>更新已存在的DOM节点</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 简化版代码</span>
+<span class="token keyword">function</span> <span class="token function">patch</span> <span class="token punctuation">(</span><span class="token parameter">oldVnode<span class="token punctuation">,</span> vnode</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 新的节点为空 摧毁旧的节点</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isUndef</span><span class="token punctuation">(</span>vnode<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isDef</span><span class="token punctuation">(</span>oldVnode<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token function">invokeDestroyHook</span><span class="token punctuation">(</span>oldVnode<span class="token punctuation">)</span>
+    <span class="token keyword">return</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isUndef</span><span class="token punctuation">(</span>oldVnode<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 旧的节点为空 创建新的节点</span>
+    <span class="token function">createElm</span><span class="token punctuation">(</span>vnode<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
+    <span class="token comment">// 新旧节点都存在的时候，判断新旧节点是都为相同节点</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">sameVnode</span><span class="token punctuation">(</span>oldVnode<span class="token punctuation">,</span> vnode<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token comment">// true：为相同节点</span>
+      <span class="token comment">// 继续判断子节点</span>
+      <span class="token function">patchVnode</span><span class="token punctuation">(</span>oldVnode<span class="token punctuation">,</span> vnode<span class="token punctuation">,</span> insertedVnodeQueue<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> removeOnly<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
+      <span class="token comment">// false：不相同的节点</span>
+      <span class="token comment">// 创建新的节点</span>
+      <span class="token comment">// 摧毁旧的节点</span>
+      <span class="token function">createElm</span><span class="token punctuation">(</span>vnode<span class="token punctuation">)</span>
+      <span class="token function">invokeDestroyHook</span><span class="token punctuation">(</span>oldVnode<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="samevnode"><a href="#samevnode" class="header-anchor">#</a> sameVnode</h4> <p>首先先来看一下 sameVnode 这个方法来判断两个节点</p> <p>是否相同的条件：</p> <ul><li>key相同（没有设置key的时候 undefined === undefined）</li> <li>tag相同</li> <li>都是（都不是）注释元素</li> <li>data都存在（不做data中每个属性的具体对比）</li> <li>如果是input元素的话，需要做一个额外的对比</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 简化版</span>
+<span class="token keyword">function</span> <span class="token function">sameVnode</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    a<span class="token punctuation">.</span>key <span class="token operator">===</span> b<span class="token punctuation">.</span>key <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>
+      <span class="token punctuation">(</span>
+        a<span class="token punctuation">.</span>tag <span class="token operator">===</span> b<span class="token punctuation">.</span>tag <span class="token operator">&amp;&amp;</span>
+        a<span class="token punctuation">.</span>isComment <span class="token operator">===</span> b<span class="token punctuation">.</span>isComment <span class="token operator">&amp;&amp;</span>
+        <span class="token function">isDef</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span>data<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token function">isDef</span><span class="token punctuation">(</span>b<span class="token punctuation">.</span>data<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span>
+        <span class="token function">sameInputType</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+      <span class="token punctuation">)</span> 
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="新旧节点不相同"><a href="#新旧节点不相同" class="header-anchor">#</a> 新旧节点不相同：</h4> <p>摧毁旧的vNode，去渲染新的vNode。</p> <h5 id="新旧节点相同"><a href="#新旧节点相同" class="header-anchor">#</a> 新旧节点相同：</h5> <p>通过 sameVnode 判断结果为true，会进行以下处理。
+这个对比新老子节点对比过程就是diff算法的核心。也就是 updateChildren 方法的主要逻辑。
+来一个简单的示例：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token operator">&lt;</span>list<span class="token operator">&gt;</span>
+  <span class="token operator">&lt;</span>item v<span class="token operator">-</span><span class="token keyword">for</span><span class="token operator">=</span><span class="token string">&quot;item in lists&quot;</span> <span class="token operator">:</span>key<span class="token operator">=</span><span class="token string">&quot;item&quot;</span><span class="token operator">&gt;</span><span class="token punctuation">{</span><span class="token punctuation">{</span>item<span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>item<span class="token operator">&gt;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>list<span class="token operator">&gt;</span>
+lists <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span><span class="token string">&quot;d&quot;</span><span class="token punctuation">]</span>
+<span class="token comment">// 对lists进行更新</span>
+lists <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span><span class="token string">&quot;c&quot;</span><span class="token punctuation">,</span><span class="token string">&quot;d&quot;</span><span class="token punctuation">,</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">]</span>
+</code></pre></div><p>对比ul节点，新旧节点相同且都有子节点，所以进入updateChildren 开始比较item子节点。</p> <ul><li>初始化设置四个指针，分别指向oldchildren和newchildren的头和尾（对应的索引）。</li> <li>进入while循环，每一轮循环的比较顺序如下：</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">while</span><span class="token punctuation">(</span><span class="token regex">/../</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>oldStart <span class="token operator">===</span> newStart<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>oldEnd <span class="token operator">===</span> newEnd<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>oldStart <span class="token operator">===</span> newEnd<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token keyword">else</span> <span class="token keyword">if</span><span class="token punctuation">(</span>oldEnd <span class="token operator">===</span> newStart<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token keyword">else</span><span class="token punctuation">{</span>
+    <span class="token comment">//上述四个分支都不满足</span>
+    <span class="token comment">//以newStart指向的节点为目标节点，去oldchildren中找是否有可复用的节点。</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>第一步：
+第二步：
+第三步：
+第四步：
+由于oldStart &gt; oldEnd 循环结束,把newChildren中剩余的节点插入到对应的位置。
+当上述4个分支都没有命中的情况，把 newChildren[newStart] 作为目标节点，去oldChildren中去寻找可复用节点。</p> <ul><li>节点有key的情况下，旧的子节点会根据key生成一个映射结构，  key -&gt; index</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 旧节点的子节点</span>
+<span class="token keyword">const</span> oldChildren <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>key<span class="token operator">:</span><span class="token string">&quot;a&quot;</span><span class="token punctuation">,</span>vNode<span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>key<span class="token operator">:</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span>vNode<span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>key<span class="token operator">:</span><span class="token string">&quot;d&quot;</span><span class="token punctuation">,</span>vNode<span class="token punctuation">}</span><span class="token punctuation">,</span>
+ <span class="token punctuation">]</span>
+<span class="token comment">// 生成的映射结构</span>
+<span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token string">&quot;a&quot;</span><span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;b&quot;</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;d&quot;</span><span class="token operator">:</span> <span class="token number">3</span>
+<span class="token punctuation">}</span> 
+</code></pre></div><ul><li>目标节点需要去遍历旧的子节点中是否有可复用的节点。</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> newNode <span class="token operator">=</span> <span class="token punctuation">{</span>key<span class="token operator">:</span><span class="token string">&quot;b&quot;</span><span class="token punctuation">,</span>vNode<span class="token punctuation">}</span>
+<span class="token comment">// 新节点有key的情况</span>
+<span class="token keyword">const</span> index <span class="token operator">=</span> map<span class="token punctuation">[</span>newNode<span class="token punctuation">.</span>key<span class="token punctuation">]</span>
+<span class="token comment">// 新节点没有key，对旧的节点进行便利</span>
+oldChildren<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">node</span><span class="token operator">=&gt;</span><span class="token function">sameVnode</span><span class="token punctuation">(</span>node<span class="token punctuation">,</span> newNode<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre></div><ul><li>我们通过key找到了新节点在旧节点中的位置 index = 1</li> <li>继续对比sameVnode（newNode，oldChildren[index]）
+<ul><li>key相同，但是对比后仍不是相同的节点，创建新节点</li> <li>true：为相同的节点，对节点进行复用</li></ul></li></ul> <p>从这条分支上，也可以看出key作为一个唯一标识，在diff算法中会起到一定的优化作用。</p> <blockquote><p>由上述代码可知，在没有key的情况下，VUE对于组件可复用的判断条件非常宽松，VUE倾向的是最大程度的去复用组件。
+key的作用就是给我们一个入口去人为控制组件复用的程度。</p></blockquote> <h3 id="通过key来管理元素复用"><a href="#通过key来管理元素复用" class="header-anchor">#</a> 通过key来管理元素复用</h3> <p>通过重置key来重新渲染组件</p> <h4 id="文本类组件不加key-防止重新渲染"><a href="#文本类组件不加key-防止重新渲染" class="header-anchor">#</a> 文本类组件不加key，防止重新渲染</h4> <p>没有key，直接替换span标签的文本
+有key的情况，会销毁Text组件，再重新创建组件。</p> <div class="language-vue extra-class"><pre class="language-vue"><code>// Text.vue
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>templete</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">:key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>text<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>{{text}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>templete</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">&quot;Text&quot;</span><span class="token punctuation">,</span>
+  props<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">&quot;text&quot;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token function">created</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;created&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h3 id="列表中key的正确使用"><a href="#列表中key的正确使用" class="header-anchor">#</a> 列表中key的正确使用</h3> <h4 id="最好不要用index作为key"><a href="#最好不要用index作为key" class="header-anchor">#</a> 最好不要用index作为key</h4> <p>对于非文本组件且组件没有依赖响应式的props的情况。删除列表的某一项（不是最后一项）。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// oldChildren</span>
+<span class="token keyword">let</span> list <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    key<span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    tag<span class="token operator">:</span><span class="token string">&quot;div&quot;</span><span class="token punctuation">,</span>
+    isComment<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+    data<span class="token operator">:</span><span class="token punctuation">{</span><span class="token regex">/.../</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    key<span class="token operator">:</span><span class="token number">1</span><span class="token punctuation">,</span>
+    tag<span class="token operator">:</span><span class="token string">&quot;div&quot;</span><span class="token punctuation">,</span>
+    isComment<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+    data<span class="token operator">:</span><span class="token punctuation">{</span><span class="token regex">/.../</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    key<span class="token operator">:</span><span class="token number">2</span><span class="token punctuation">,</span>
+    tag<span class="token operator">:</span><span class="token string">&quot;div&quot;</span><span class="token punctuation">,</span>
+    isComment<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+    data<span class="token operator">:</span><span class="token punctuation">{</span><span class="token regex">/.../</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span>
+<span class="token comment">// newChildren</span>
+<span class="token keyword">let</span> list <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    key<span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span>
+    tag<span class="token operator">:</span><span class="token string">&quot;div&quot;</span><span class="token punctuation">,</span>
+    isComment<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+    data<span class="token operator">:</span><span class="token punctuation">{</span><span class="token regex">/.../</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    key<span class="token operator">:</span><span class="token number">1</span><span class="token punctuation">,</span>
+    tag<span class="token operator">:</span><span class="token string">&quot;div&quot;</span><span class="token punctuation">,</span>
+    isComment<span class="token operator">:</span><span class="token boolean">false</span><span class="token punctuation">,</span>
+    data<span class="token operator">:</span><span class="token punctuation">{</span><span class="token regex">/.../</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+</code></pre></div><blockquote><p>根据上述diff算法的逻辑，可以得知sameVnode(oldChildren[0],newChildren[0]) 为true，则直接复用oldChildren[0]。</p></blockquote></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/blog/javascript/imgPreview.html" class="prev">
+        前端图片本地预览
+      </a></span> <!----></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/blog/assets/js/app.459e5512.js" defer></script><script src="/blog/assets/js/2.0e1075d0.js" defer></script><script src="/blog/assets/js/7.8fa74af5.js" defer></script>
+  </body>
+</html>
